@@ -3,11 +3,17 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const envFilePath = path.resolve(__dirname, '../src/environment/environment.ts');
-// const environmentProd = path.resolve(__dirname, '../.env.production');
+const environmentProd = path.resolve(__dirname, '../.env.production');
 
 function checkForPendingChanges() {
   try {
-    // Check for uncommitted changes
+    const currentBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+    if (currentBranch !== 'develop') {
+      console.error('Error: Version updates must be performed from the develop branch.');
+      console.error(`Current branch is '${currentBranch}'. Please switch to 'develop' branch.`);
+      process.exit(1);
+    }
+
     const status = execSync('git status --porcelain').toString().trim();
     if (status) {
       console.error('Error: There are uncommitted changes in the current branch.');
@@ -15,7 +21,6 @@ function checkForPendingChanges() {
       process.exit(1);
     }
 
-    // Check for untracked files
     const untrackedFiles = execSync('git ls-files --others --exclude-standard').toString().trim();
     if (untrackedFiles) {
       console.error('Error: There are untracked files in the current branch.');
@@ -78,20 +83,16 @@ function updateVersion(newVersion) {
 
 function gitOperations(newVersion) {
   try {
-    // Get current branch name
     const currentBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
     console.log(`Working on current branch: ${currentBranch}`);
 
-    // Add and commit the version update
     execSync('git add src/environment/environment.ts', { stdio: 'inherit' });
     execSync(`git commit -m "Project version updated to ${newVersion}"`, { stdio: 'inherit' });
     console.log(`Changes committed with message: "Project version updated to ${newVersion}"`);
 
-    // Create tag with the new version
     execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
     console.log(`Tag created: ${newVersion}`);
 
-    // Push the tag and current branch to origin
     execSync(`git push origin ${newVersion}`, { stdio: 'inherit' });
     execSync(`git push origin ${currentBranch}`, { stdio: 'inherit' });
     console.log(`Tag ${newVersion} and branch ${currentBranch} pushed to origin`);
@@ -126,7 +127,6 @@ function createGitHubRelease(version) {
 
 async function main() {
   try {
-    // Process command line arguments
     const isDryRun = process.argv.includes('--dry-run');
     const isMinor = process.argv.includes('--minor');
     const isPatch = process.argv.includes('--patch');
@@ -141,10 +141,8 @@ async function main() {
       process.exit(1);
     }
 
-    // Check for pending changes before proceeding
     checkForPendingChanges();
 
-    // Get current and new version
     const currentVersion = getCurrentVersion();
     console.log(`Current version: ${currentVersion}`);
 
@@ -152,9 +150,7 @@ async function main() {
     if (isMinor) newVersion = incrementMinorVersion(currentVersion);
     if (isPatch) newVersion = incrementPatchVersion(currentVersion);
 
-    console.log(`New version: ${newVersion}`);
-
-    // const API_URL = getApiUrlProdEnvironment();
+    const API_URL = getApiUrlProdEnvironment();
 
     if (isDryRun) {
       console.log('DRY RUN MODE: Would update version to', newVersion);
@@ -173,22 +169,15 @@ async function main() {
     };
 
     try {
-      // Update version in environment.ts
       updateVersion(newVersion);
-
-      // Commit changes, create tag, and push
       gitOperations(newVersion);
 
-      // Deploy to production
       console.log('Running deploy:prod...');
-      // execSync('yarn run deploy:prod', { stdio: 'inherit' });
+      execSync('npm run deploy:prod', { stdio: 'inherit' });
       console.log('Deployment completed successfully');
 
-      // Create GitHub release
       createGitHubRelease(newVersion);
-
-      // Update version in Firebase via API
-      // makeApiRequest(API_URL, { version: newVersion });
+      makeApiRequest(API_URL, { version: newVersion });
 
       console.log('Version update and deployment process completed successfully');
     } catch (error) {
@@ -196,8 +185,8 @@ async function main() {
       console.error('Attempting to restore original state...');
 
       try {
-        // Restore original version if needed
         updateVersion(originalState.version);
+        makeApiRequest(API_URL, { version: originalState.version });
         console.error('Original state restored. Please check the repository status manually.');
       } catch (restoreError) {
         console.error('Failed to restore original state:', restoreError.message);
