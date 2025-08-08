@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const envFilePath = path.resolve(__dirname, './src/environment/environment.ts');
+const envFilePath = path.resolve(__dirname, '../src/environment/environment.ts');
 // const environmentProd = path.resolve(__dirname, '../.env.production');
 
 function checkForPendingChanges() {
