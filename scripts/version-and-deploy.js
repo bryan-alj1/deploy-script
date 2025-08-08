@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const envFilePath = path.resolve(__dirname, '../src/environment/environment.ts');
+const envFilePath = path.resolve(__dirname, './src/environment/environment.ts');
 // const environmentProd = path.resolve(__dirname, '../.env.production');
 
 function checkForPendingChanges() {
@@ -83,7 +83,7 @@ function gitOperations(newVersion) {
     console.log(`Working on current branch: ${currentBranch}`);
 
     // Add and commit the version update
-    execSync('git add src/environment/environment.ts', { stdio: 'inherit' });
+    execSync('git add scripts/src/environment/environment.ts', { stdio: 'inherit' });
     execSync(`git commit -m "Project version updated to ${newVersion}"`, { stdio: 'inherit' });
     console.log(`Changes committed with message: "Project version updated to ${newVersion}"`);
 
