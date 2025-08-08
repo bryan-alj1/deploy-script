@@ -93,8 +93,7 @@ function gitOperations(newVersion) {
     // execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
     // console.log(`Tag created: ${newVersion}`);
 
-    execSync(`git push origin ${newVersion}`, { stdio: 'inherit' });
-    execSync(`git push origin ${currentBranch}`, { stdio: 'inherit' });
+    execSync(`git push origin develop`, { stdio: 'inherit' });
     console.log(`Tag ${newVersion} and branch ${currentBranch} pushed to origin`);
 
     return currentBranch;
