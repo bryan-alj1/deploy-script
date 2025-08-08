@@ -88,7 +88,7 @@ function gitOperations(newVersion) {
     console.log(`Changes committed with message: "Project version updated to ${newVersion}"`);
 
     // Create tag with the new version
-    execSync(`git tag ${newVersion}`, { stdio: 'inherit' });
+    execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
     console.log(`Tag created: ${newVersion}`);
 
     // Push the tag and current branch to origin
