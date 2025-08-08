@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const envFilePath = path.resolve(__dirname, '../src/environment/environment.ts');
-const environmentProd = path.resolve(__dirname, '../.env.production');
+// const environmentProd = path.resolve(__dirname, '../.env.production');
 
 function checkForPendingChanges() {
   try {
@@ -150,7 +150,7 @@ async function main() {
     if (isMinor) newVersion = incrementMinorVersion(currentVersion);
     if (isPatch) newVersion = incrementPatchVersion(currentVersion);
 
-    const API_URL = getApiUrlProdEnvironment();
+    // const API_URL = getApiUrlProdEnvironment();
 
     if (isDryRun) {
       console.log('DRY RUN MODE: Would update version to', newVersion);
@@ -177,7 +177,7 @@ async function main() {
       console.log('Deployment completed successfully');
 
       createGitHubRelease(newVersion);
-      makeApiRequest(API_URL, { version: newVersion });
+      // makeApiRequest(API_URL, { version: newVersion });
 
       console.log('Version update and deployment process completed successfully');
     } catch (error) {
@@ -186,7 +186,7 @@ async function main() {
 
       try {
         updateVersion(originalState.version);
-        makeApiRequest(API_URL, { version: originalState.version });
+        // makeApiRequest(API_URL, { version: originalState.version });
         console.error('Original state restored. Please check the repository status manually.');
       } catch (restoreError) {
         console.error('Failed to restore original state:', restoreError.message);
