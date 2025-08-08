@@ -90,8 +90,8 @@ function gitOperations(newVersion) {
     execSync(`git commit -m "Project version updated to ${newVersion}"`, { stdio: 'inherit' });
     console.log(`Changes committed with message: "Project version updated to ${newVersion}"`);
 
-    execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
-    console.log(`Tag created: ${newVersion}`);
+    // execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
+    // console.log(`Tag created: ${newVersion}`);
 
     execSync(`git push origin ${newVersion}`, { stdio: 'inherit' });
     execSync(`git push origin ${currentBranch}`, { stdio: 'inherit' });
@@ -185,6 +185,7 @@ async function main() {
       console.error('Attempting to restore original state...');
 
       try {
+        // undo commit
         execSync('git reset --hard HEAD~1', { stdio: 'inherit' });
         execSync(`git tag -d ${newVersion}`, { stdio: 'inherit' });
         execSync(`git push origin :refs/tags/${newVersion}`, { stdio: 'inherit' });
