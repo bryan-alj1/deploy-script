@@ -93,9 +93,6 @@ function gitOperations(newVersion) {
     // execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
     // console.log(`Tag created: ${newVersion}`);
 
-    execSync(`git push origin develop`, { stdio: 'inherit' });
-    console.log(`Tag ${newVersion} and branch ${currentBranch} pushed to origin`);
-
     return currentBranch;
   } catch (error) {
     console.error('Git operations failed:', error.message);
@@ -175,6 +172,7 @@ async function main() {
       execSync('npm run deploy:prod', { stdio: 'inherit' });
       console.log('Deployment completed successfully');
 
+      execSync(`git push origin develop`, { stdio: 'inherit' });
       createGitHubRelease(newVersion);
       // makeApiRequest(API_URL, { version: newVersion });
 
@@ -186,10 +184,6 @@ async function main() {
       try {
         // undo commit
         execSync('git reset --hard HEAD~1', { stdio: 'inherit' });
-        execSync(`git tag -d ${newVersion}`, { stdio: 'inherit' });
-        execSync(`git push origin :refs/tags/${newVersion}`, { stdio: 'inherit' });
-        execSync(`git push origin ${originalState.version}`, { stdio: 'inherit' });
-
         // makeApiRequest(API_URL, { version: originalState.version });
         console.error('Original state restored. Please check the repository.');
       } catch (restoreError) {
