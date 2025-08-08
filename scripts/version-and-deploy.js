@@ -83,7 +83,7 @@ function gitOperations(newVersion) {
     console.log(`Working on current branch: ${currentBranch}`);
 
     // Add and commit the version update
-    execSync('git add scripts/src/environment/environment.ts', { stdio: 'inherit' });
+    execSync('git add src/environment/environment.ts', { stdio: 'inherit' });
     execSync(`git commit -m "Project version updated to ${newVersion}"`, { stdio: 'inherit' });
     console.log(`Changes committed with message: "Project version updated to ${newVersion}"`);
 
