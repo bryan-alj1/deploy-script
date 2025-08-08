@@ -115,7 +115,7 @@ function makeApiRequest(apiUrl, { version }) {
 
 function createGitHubRelease(version) {
   try {
-    execSync(`gh release create ${version} --title "Versión ${version}"`, { stdio: 'inherit' });
+    execSync(`gh release create ${version} --title "Versión ${version}" --notes "" --confirm`, { stdio: 'inherit' });
     console.log(`GitHub release created: Versión ${version}`);
     return true;
   } catch (error) {
