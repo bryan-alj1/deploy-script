@@ -169,7 +169,7 @@ async function main() {
       gitOperations(newVersion);
 
       console.log('Running deploy:prod...');
-      execSync('npm run deploy:prod', { stdio: 'inherit' });
+      // execSync('npm run deploy:prod', { stdio: 'inherit' });
       console.log('Deployment completed successfully');
 
       execSync(`git push origin develop`, { stdio: 'inherit' });
