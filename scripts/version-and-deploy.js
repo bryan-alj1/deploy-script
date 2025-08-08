@@ -160,10 +160,6 @@ async function main() {
       return;
     }
 
-    const originalState = {
-      version: currentVersion
-    };
-
     try {
       updateVersion(newVersion);
       gitOperations(newVersion);
