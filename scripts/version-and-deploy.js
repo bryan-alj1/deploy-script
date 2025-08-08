@@ -186,6 +186,14 @@ async function main() {
 
       try {
         updateVersion(originalState.version);
+        // undo commit and tag
+        execSync('git reset --hard HEAD~1', { stdio: 'inherit' });
+        execSync(`git tag -d ${newVersion}`, { stdio: 'inherit' });
+        execSync(`git push origin :refs/tags/${newVersion}`, { stdio: 'inherit' });
+        execSync(`git push origin ${originalState.version}`, { stdio: 'inherit' });
+        console.log('Original state restored successfully');
+
+
         // makeApiRequest(API_URL, { version: originalState.version });
         console.error('Original state restored. Please check the repository status manually.');
       } catch (restoreError) {
