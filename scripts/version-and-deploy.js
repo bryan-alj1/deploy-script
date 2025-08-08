@@ -185,17 +185,13 @@ async function main() {
       console.error('Attempting to restore original state...');
 
       try {
-        updateVersion(originalState.version);
-        // undo commit and tag
         execSync('git reset --hard HEAD~1', { stdio: 'inherit' });
         execSync(`git tag -d ${newVersion}`, { stdio: 'inherit' });
         execSync(`git push origin :refs/tags/${newVersion}`, { stdio: 'inherit' });
         execSync(`git push origin ${originalState.version}`, { stdio: 'inherit' });
-        console.log('Original state restored successfully');
-
 
         // makeApiRequest(API_URL, { version: originalState.version });
-        console.error('Original state restored. Please check the repository status manually.');
+        console.error('Original state restored. Please check the repository.');
       } catch (restoreError) {
         console.error('Failed to restore original state:', restoreError.message);
         console.error('Manual intervention required to restore repository state.');
