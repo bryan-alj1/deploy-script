@@ -166,7 +166,6 @@ async function main() {
 
       console.log('Running deploy:prod...');
       // execSync('npm run deploy:prod', { stdio: 'inherit' });
-      throw new Error('Simulated deployment failure'); // Simulate failure for testing rollback
 
       console.log('Deployment completed successfully');
 
