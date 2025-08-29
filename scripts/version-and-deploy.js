@@ -169,6 +169,8 @@ async function main() {
       console.log('Deployment completed successfully');
 
       execSync(`git push origin develop`, { stdio: 'inherit' });
+      execSync(`git tag -a ${newVersion} -m ""`, { stdio: 'inherit' });
+      execSync(`git push origin ${newVersion}`, { stdio: 'inherit' });
       createGitHubRelease(newVersion);
       // makeApiRequest(API_URL, { version: newVersion });
 
